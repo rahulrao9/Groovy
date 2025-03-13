@@ -1,5 +1,3 @@
-# 🎵 Groovy: AI-Powered Music Recommendation App
-
 <div align="center">
   <img src="https://raw.githubusercontent.com/rahulrao9/Groovy/master/screenshots/logo.png" alt="Groovy App Banner" width="200"/>
   <p><i>Discover your next favorite track with Groovy</i></p>
