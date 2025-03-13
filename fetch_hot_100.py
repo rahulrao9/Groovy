@@ -12,14 +12,24 @@ def init_db():
     """Initialize SQLite database and create table if it doesn't exist."""
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
+    
+    # Create the table with the new 'count' column
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS hot100 (
             id TEXT PRIMARY KEY,
             artist TEXT,
             song TEXT,
+            count INTEGER DEFAULT 0,  -- New column to track occurrences
             UNIQUE(artist, song)  -- Ensure no duplicate artist+song
         )
     """)
+
+    # Ensure 'count' column exists for older versions of the database
+    cursor.execute("PRAGMA table_info(hot100)")
+    columns = [col[1] for col in cursor.fetchall()]
+    if "count" not in columns:
+        cursor.execute("ALTER TABLE hot100 ADD COLUMN count INTEGER DEFAULT 0")
+    
     conn.commit()
     conn.close()
 
@@ -27,8 +37,15 @@ def song_exists(artist, song):
     """Check if the song is already in the database."""
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    cursor.execute("SELECT id FROM hot100 WHERE artist = ? AND song = ?", (artist, song))
+    cursor.execute("SELECT id, count FROM hot100 WHERE artist = ? AND song = ?", (artist, song))
     result = cursor.fetchone()
+    
+    if result:
+        # Increment the count for existing songs
+        song_id, current_count = result
+        cursor.execute("UPDATE hot100 SET count = ? WHERE id = ?", (current_count + 1, song_id))
+        conn.commit()
+    
     conn.close()
     return result is not None  # Returns True if song exists
 
@@ -37,7 +54,7 @@ def save_to_db(unique_id, artist, song):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     try:
-        cursor.execute("INSERT INTO hot100 (id, artist, song) VALUES (?, ?, ?)", (unique_id, artist, song))
+        cursor.execute("INSERT INTO hot100 (id, artist, song, count) VALUES (?, ?, ?, ?)", (unique_id, artist, song, 0))
         conn.commit()
     except sqlite3.IntegrityError:
         pass  # Skip duplicates
@@ -118,4 +135,4 @@ def fetch_hot_100(limit=10):
 
 if __name__ == "__main__":
     init_db()  # Initialize the database
-    fetch_hot_100(limit=10)
+    fetch_hot_100(limit=20)

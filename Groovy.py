@@ -1,47 +1,13 @@
 import os
 import json
+import sqlite3
 import streamlit as st
 from PIL import Image
 
-# Paths for assets
+DB_PATH = "hot100.db"
 META_DIR = "assets/meta"
 IMG_DIR = "assets/imgs"
 MUSIC_DIR = "assets/music"
-
-# Load music metadata and match with images/audio files
-def load_music_data():
-    records = []
-    
-    if not os.path.exists(META_DIR):
-        print("Meta directory not found!")
-        return records
-
-    for file in os.listdir(META_DIR):
-        if file.endswith(".json"):
-            meta_path = os.path.join(META_DIR, file)
-            with open(meta_path, "r", encoding="utf-8") as f:
-                data = json.load(f)
-                
-                song_name = data.get("song")
-                artist_name = data.get("artist")
-                song_id = file.split(".")[0]  # Unique ID from filename
-
-                image_path = os.path.join(IMG_DIR, f"{song_id}.jpg")
-                music_path = os.path.join(MUSIC_DIR, f"{song_id}.mp3")
-
-                if os.path.exists(music_path):  # Ensure at least the music file exists
-                    records.append({
-                        "id": song_id,
-                        "title": song_name,
-                        "artist": artist_name,
-                        "image": image_path if os.path.exists(image_path) else "assets/default.jpg",  # Fallback image
-                        "audio": music_path
-                    })
-
-    return records
-
-# Load music records
-music_records = load_music_data()
 
 # Custom CSS for styling (fonts & colors)
 st.markdown("""
@@ -67,7 +33,7 @@ st.markdown("""
         justify-content: center;
         text-align: center;
         gap: 10px;
-        margin-bottom: 30px; /* Increased gap between rows */
+        margin-bottom: 30px;
     }
     
     .album-container img {
@@ -87,7 +53,7 @@ st.markdown("""
     .album-caption {
         font-size: 13px;
         font-weight: bold;
-        color: #636363;
+        color: #7d7c7c;
     }
 
     .stButton > button {
@@ -105,7 +71,7 @@ st.markdown("""
     .stButton > button:hover {
         background: linear-gradient(45deg, #e52e71, #ff8a00);
         transform: scale(1.05);
-        color: white; /* Ensures text color remains white */
+        color: white;
     }
 
     .now-playing {
@@ -114,24 +80,100 @@ st.markdown("""
         font-size: 18px;
         color: #ff8a00;
     }
-
 </style>
 """, unsafe_allow_html=True)
 
-st.title("🎵 Groovy")
-
-# Use session state to track currently playing audio
+# Initialize session state
+if "total_plays" not in st.session_state:
+    st.session_state.total_plays = 0
+if "recommendations" not in st.session_state:
+    st.session_state.recommendations = []
 if "current_audio" not in st.session_state:
     st.session_state.current_audio = None
 
-# Function to select a song
+# Load music data
+def load_music_data():
+    records = []
+    if not os.path.exists(META_DIR):
+        return records
+    for file in os.listdir(META_DIR):
+        if file.endswith(".json"):
+            meta_path = os.path.join(META_DIR, file)
+            with open(meta_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                song_id = file.split(".")[0]
+                image_path = os.path.join(IMG_DIR, f"{song_id}.jpg")
+                music_path = os.path.join(MUSIC_DIR, f"{song_id}.mp3")
+                if os.path.exists(music_path):
+                    records.append({
+                        "id": song_id,
+                        "title": data.get("song"),
+                        "artist": data.get("artist"),
+                        "image": image_path if os.path.exists(image_path) else "assets/default.jpg",
+                        "audio": music_path
+                    })
+    return records
+
+# Fetch recommendations
+def fetch_recommendations():
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, artist, song FROM recommendations ORDER BY relevance_score DESC LIMIT 5")
+    results = cursor.fetchall()
+    conn.close()
+    recommendations = []
+    for row in results:
+        song_id, artist, song = row
+        image_path = os.path.join(IMG_DIR, f"{song_id}.jpg")
+        music_path = os.path.join(MUSIC_DIR, f"{song_id}.mp3")
+        if os.path.exists(music_path):
+            recommendations.append({
+                "id": song_id,
+                "title": song,
+                "artist": artist,
+                "image": image_path if os.path.exists(image_path) else "assets/default.jpg",
+                "audio": music_path
+            })
+    return recommendations
+
+# Load music records
+music_records = load_music_data()
+
+# Main UI
+st.title("🎵 Groovy")
+
+# Function to select a song and update play count
 def select_song(song_id):
     for record in music_records:
         if record["id"] == song_id:
             st.session_state.current_audio = record
-            break  # Stop after finding the matching song
+            break
+    
+    # Update play count in database
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("UPDATE hot100 SET count = count + 1 WHERE id = ?", (song_id,))
+    conn.commit()
+    conn.close()
 
-# Display music records in a structured row format
+    # Increment session play count
+    st.session_state.total_plays += 1
+
+
+# Recommendations Section
+if st.session_state.total_plays >= 5 and st.session_state.recommendations:
+    st.markdown("### Recommendations")
+    rec_cols = st.columns(5)
+    for col, rec in zip(rec_cols, st.session_state.recommendations):
+        with col:
+            with st.container():
+                st.markdown(f'<div class="album-container">', unsafe_allow_html=True)
+                st.image(rec["image"], use_container_width=True)  # Updated here!
+                st.button("▶ Play", key=f"btn_{rec['id']}", on_click=select_song, args=(rec["id"],))
+                st.markdown(f'<div class="album-caption">{rec["title"]}<br>{rec["artist"]}</div>', unsafe_allow_html=True)
+                st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown("---")
+
 num_cols = 5  # Number of columns per row
 for i in range(0, len(music_records), num_cols):
     row_records = music_records[i:i + num_cols]
