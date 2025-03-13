@@ -74,7 +74,7 @@
 1. **Clone the repository**
    ```bash
    git clone https://github.com/rahulrao9/Groovy.git
-   cd groovy-music-app
+   cd groovy
    ```
 
 2. **Install dependencies**
