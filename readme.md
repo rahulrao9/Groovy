@@ -30,7 +30,7 @@
   <img src="https://raw.githubusercontent.com/rahulrao9/Groovy/master/screenshots/1.png" alt="Groovy App Main Screen" width="800"/>
   <p><i>Groovy's main interface with album cover display and music player</i></p>
   
-  <img src="https://raw.githubusercontent.com/rahulrao9/Groovy/master/screenshots/1.png" alt="Groovy App Recommendations" width="800"/>
+  <img src="https://raw.githubusercontent.com/rahulrao9/Groovy/master/screenshots/2.png" alt="Groovy App Recommendations" width="800"/>
   <p><i>Personalized recommendations improve as you listen to more music</i></p>
 </div>
 
