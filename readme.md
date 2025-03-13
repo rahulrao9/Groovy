@@ -5,6 +5,15 @@
   <p><i>Discover your next favorite track with Groovy</i></p>
 </div>
 
+## 🛠 Tech Stack
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python"/>
+  <img src="https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white" alt="Streamlit"/>
+  <img src="https://img.shields.io/badge/Pandas-150458?style=for-the-badge&logo=pandas&logoColor=white" alt="Pandas"/>
+  <img src="https://img.shields.io/badge/scikit--learn-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white" alt="Scikit-learn"/>
+  <img src="https://img.shields.io/badge/SQL-4479A1?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQL"/>
+</p>
 - **Streamlit**: Powers the interactive web application
 - **Pandas & NumPy**: Data manipulation and numerical operations
 - **scikit-learn**: Machine learning for recommendations
@@ -40,16 +49,6 @@
   <img src="https://raw.githubusercontent.com/rahulrao9/Groovy/master/screenshots/2.png" alt="Groovy App Recommendations" width="800"/>
   <p><i>Personalized recommendations improve as you listen to more music</i></p>
 </div>
-
-## 🛠 Tech Stack
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python"/>
-  <img src="https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white" alt="Streamlit"/>
-  <img src="https://img.shields.io/badge/Pandas-150458?style=for-the-badge&logo=pandas&logoColor=white" alt="Pandas"/>
-  <img src="https://img.shields.io/badge/scikit--learn-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white" alt="Scikit-learn"/>
-  <img src="https://img.shields.io/badge/SQL-4479A1?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQL"/>
-</p>
 
 ## 🏗 Architecture
 
