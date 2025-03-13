@@ -23,7 +23,7 @@
 
 ## 🚀 Features
 
-- **Personal Music Library** - Browse and play your favorite songs with a beautiful UI
+- **Personal Music Library** - Browse and play Billboard's top tracks
 - **AI-Powered Recommendations** - Personalized song suggestions that improve as you listen
 - **Federated Learning** - Your listening data stays on your device, maintaining privacy
 - **Billboard Hot 100 Integration** - Automatically fetch the latest chart-toppers
