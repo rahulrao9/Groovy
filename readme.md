@@ -5,6 +5,13 @@
   <p><i>Discover your next favorite track with Groovy</i></p>
 </div>
 
+- **Streamlit**: Powers the interactive web application
+- **Pandas & NumPy**: Data manipulation and numerical operations
+- **scikit-learn**: Machine learning for recommendations
+- **yt-dlp**: YouTube video downloading
+- **BeautifulSoup4**: Web scraping for Billboard Hot 100
+- **SQLite**: Local database storage
+
 <p align="center">
   <a href="#-features">Features</a> •
   <a href="#-screenshots">Screenshots</a> •
@@ -43,13 +50,6 @@
   <img src="https://img.shields.io/badge/scikit--learn-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white" alt="Scikit-learn"/>
   <img src="https://img.shields.io/badge/SQL-4479A1?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQL"/>
 </p>
-
-- **Streamlit**: Powers the interactive web application
-- **Pandas & NumPy**: Data manipulation and numerical operations
-- **scikit-learn**: Machine learning for recommendations
-- **yt-dlp**: YouTube video downloading
-- **BeautifulSoup4**: Web scraping for Billboard Hot 100
-- **SQLite**: Local database storage
 
 ## 🏗 Architecture
 
