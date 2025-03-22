@@ -36,6 +36,9 @@
 ## 📸 Screenshots
 
 <div align="center">
+  <img src="https://raw.githubusercontent.com/rahulrao9/Groovy/master/screenshots/firebase.png" alt="Groovy App Main Screen" width="800"/>
+  <p><i>Groovy's login page</i></p>
+
   <img src="https://raw.githubusercontent.com/rahulrao9/Groovy/master/screenshots/1.png" alt="Groovy App Main Screen" width="800"/>
   <p><i>Groovy's main interface with album cover display and music player</i></p>
   
