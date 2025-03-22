@@ -299,33 +299,33 @@ def save_metadata(song_id, metadata):
 
     # Check and add missing columns
     try:
-        cursor.execute("PRAGMA table_info(hot100)")
-        existing_columns = {col[1] for col in cursor.fetchall()}
+    cursor.execute("PRAGMA table_info(hot100)")
+    existing_columns = {col[1] for col in cursor.fetchall()}
 
-        for column, col_type in columns_to_add.items():
-            if column not in existing_columns:
-                cursor.execute(f"ALTER TABLE hot100 ADD COLUMN {column} {col_type}")
-                print(f"Added column: {column}")
+    for column, col_type in columns_to_add.items():
+        if column not in existing_columns:
+            cursor.execute(f"ALTER TABLE hot100 ADD COLUMN {column} {col_type}")
+            print(f"Added column: {column}")
 
-        # Update metadata in the table
-        query = """
-        UPDATE hot100
-        SET youtube_url = ?, uploader = ?, duration = ?, views = ?, like_count = ?, 
+    # Update metadata in the table
+    query = """
+    UPDATE hot100
+    SET youtube_url = ?, uploader = ?, duration = ?, views = ?, like_count = ?, 
             release_date = ?, thumbnail = ?, tags = ?, description = ?, last_updated = ?
-        WHERE id = ?
-        """
-        cursor.execute(query, (
-            metadata["url"], metadata["uploader"], metadata["duration"], metadata["views"],
-            metadata["like_count"], metadata["release_date"], metadata["thumbnails"],
+    WHERE id = ?
+    """
+    cursor.execute(query, (
+        metadata["url"], metadata["uploader"], metadata["duration"], metadata["views"],
+        metadata["like_count"], metadata["release_date"], metadata["thumbnails"],
             json.dumps(metadata["tags"]), metadata.get("description", ""), 
             metadata["last_updated"], song_id
-        ))
+    ))
 
-        conn.commit()
+    conn.commit()
     except sqlite3.Error as e:
         print(f"Database error: {e}")
     finally:
-        conn.close()
+    conn.close()
     
     # Update JSON metadata file
     json_path = os.path.join("assets", "meta", f"{song_id}.json")
@@ -438,7 +438,7 @@ def process_songs():
         if not metadata or not metadata["url"]:
             results.append(f"No results found for {artist_name} - {song_name}")
             continue
-            
+        
         video_url = metadata["url"]
         print(f"Found video: {video_url}")
         
@@ -447,7 +447,7 @@ def process_songs():
         
         if "Failed to download" in result:
             failed_count += 1
-            results.append(f"ID: {song_id} | {artist_name} - {song_name}\n{result}\n")
+        results.append(f"ID: {song_id} | {artist_name} - {song_name}\n{result}\n")
             continue
         
         # If download was successful
@@ -456,7 +456,7 @@ def process_songs():
         # Save metadata
         print("Saving metadata")
         try:
-            save_metadata(song_id=song_id, metadata=metadata)
+        save_metadata(song_id=song_id, metadata=metadata)
             updated_metadata_count += 1
         except Exception as e:
             print(f"Error saving metadata: {e}")

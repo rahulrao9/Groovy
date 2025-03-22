@@ -19,13 +19,16 @@
   <img src="https://img.shields.io/badge/Pandas-150458?style=for-the-badge&logo=pandas&logoColor=white" alt="Pandas"/>
   <img src="https://img.shields.io/badge/scikit--learn-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white" alt="Scikit-learn"/>
   <img src="https://img.shields.io/badge/SQL-4479A1?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQL"/>
+  <img src="https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black" alt="Firebase"/>
 </p>
 
 ## 🚀 Features
 
 - **Personal Music Library** - Browse and play Billboard's top tracks
 - **AI-Powered Recommendations** - Personalized song suggestions that improve as you listen
-- **Federated Learning** - Your listening data stays on your device, maintaining privacy
+- **User Authentication** - Create an account and sign in to access your personalized content
+- **Cross-Device Sync** - Your listening history and preferences follow you across devices
+- **Federated Learning** - Your listening data is securely stored and processed
 - **Billboard Hot 100 Integration** - Automatically fetch the latest chart-toppers
 - **YouTube Integration** - Download high-quality audio from official music videos
 - **Beautiful UI/UX** - Modern, responsive design with intuitive controls
@@ -51,10 +54,14 @@
 │   └── 📂 music/             # MP3 audio files
 │
 ├── 📄 Groovy.py               # Main application UI
+├── 📄 login.py                # Authentication interface
+├── 📄 firebase_config.py      # Firebase configuration
 ├── 📄 rec.py                  # Recommendation system
 ├── 📄 fetch_hot_100.py        # Billboard scraper
 ├── 📄 download_music.py       # YouTube downloader
 ├── 📄 clear_db_assets.py      # Utility to reset app
+├── 📄 run_groovy.py           # Application launcher
+├── 📄 .env.example            # Environment variables template
 └── 📄 requirements.txt        # Dependencies
 ```
 
@@ -71,22 +78,32 @@
    pip install -r requirements.txt
    ```
 
-3. **Fetch Billboard Hot 100 data**
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env
+   ```
+   Edit the `.env` file with your Firebase credentials and other configuration
+
+4. **Fetch Billboard Hot 100 data**
    ```bash
    python fetch_hot_100.py
    ```
 
-4. **Download music from YouTube**
+5. **Download music from YouTube**
    ```bash
    python download_music.py
    ```
 
-5. **Launch the app**
+6. **Launch the app**
+   ```bash
+   python run_groovy.py
+   ```
+   or
    ```bash
    streamlit run Groovy.py
    ```
 
-6. **Open the app in your browser**
+7. **Open the app in your browser**
    ```
    http://localhost:8501
    ```
@@ -119,9 +136,16 @@ Groovy uses a sophisticated recommendation engine that combines multiple approac
 
 The recommendation model updates every 10 plays, adapting to your changing preferences.
 
+### User Authentication and Data Sync
+
+Groovy uses Firebase Authentication to:
+- Allow users to create accounts and sign in
+- Securely store and sync listening history across devices
+- Provide personalized recommendations that follow users wherever they go
+
 ### Data Privacy
 
-All data processing happens locally on your machine - your listening habits never leave your device!
+User data is securely stored in Firebase and processed according to best practices. Authentication ensures that your listening habits are private and only accessible to you.
 
 ## 🧠 Machine Learning Details
 
@@ -139,19 +163,20 @@ The recommendation system works by:
 3. **Multi-factor Scoring**
    ```python
    recommendation_score = (
-       count_normalized * 0.4 +          # Play count (most important)
-       artist_affinity_score * 0.2 +     # Artist preference 
-       tag_affinity_score * 0.15 +       # Genre/tag preference
-       collaborative_score * 0.05 +      # Similar to your favorites
-       popularity_score * 0.1            # Global popularity
-   ) * (1 + recency_factor * 0.5)        # Recency boost
+       count_normalized * 0.35 +          # Play count
+       engagement_ratio * 0.1 +           # How engaging the content is
+       artist_affinity_score * 0.15 +     # Artist preference 
+       tag_affinity_score * 0.15 +        # Genre/tag preference
+       collaborative_score * 0.15 +       # Similar users' preferences
+       popularity_score * 0.1             # Global popularity
+   ) * (1 + recency_factor * 0.5)         # Recency boost
    ```
 
 ## 📋 Todo List & Future Improvements
 
-- [ ] User accounts and profiles
+- [x] User accounts and profiles
+- [x] Multi-device sync
 - [ ] Social sharing features
-- [ ] Multi-device sync
 - [ ] Advanced visualization of listening habits
 - [ ] Voice-activated controls
 - [ ] Expanded music metadata

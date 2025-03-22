@@ -1,58 +1,117 @@
-# Environment Variables Setup
+# Environment Variables Setup for Groovy
 
-This application uses environment variables to store sensitive configuration information. This improves security by preventing sensitive credentials from being committed to version control.
+This guide will help you set up the necessary environment variables for the Groovy app, particularly focusing on Firebase authentication and configuration.
 
-## Setting Up Your .env File
+## Firebase Setup
 
-1. Copy the `.env` file template to a new file named `.env`:
-   ```
-   cp .env.example .env
-   ```
+### 1. Create a Firebase Project
+1. Go to the [Firebase Console](https://console.firebase.google.com/)
+2. Click "Add project" and follow the setup instructions
+3. Enable Google Analytics if desired (optional)
 
-2. Edit the `.env` file and fill in your actual values:
+### 2. Set Up Authentication
+1. In the Firebase Console, navigate to your project
+2. Go to "Authentication" in the left sidebar
+3. Click "Get Started"
+4. Enable the "Email/Password" sign-in method
+5. Save the changes
 
-### Database Configuration
-- `DB_PATH`: Path to the SQLite database file (default: "hot100.db")
+### 3. Create a Firestore Database
+1. In the Firebase Console, navigate to "Firestore Database"
+2. Click "Create database"
+3. Start in test mode (you can adjust security rules later)
+4. Choose a database location that's closest to your users
+5. Click "Enable"
 
-### Firebase Client Configuration
-Get these values from your Firebase project settings (Project Settings > General):
-- `FIREBASE_API_KEY`: Your Firebase Web API Key
-- `FIREBASE_AUTH_DOMAIN`: Your Firebase Auth Domain
-- `FIREBASE_DATABASE_URL`: Your Firebase Database URL
-- `FIREBASE_PROJECT_ID`: Your Firebase Project ID
-- `FIREBASE_STORAGE_BUCKET`: Your Firebase Storage Bucket
-- `FIREBASE_MESSAGING_SENDER_ID`: Your Firebase Messaging Sender ID
-- `FIREBASE_APP_ID`: Your Firebase App ID
+### 4. Generate Firebase Web Config
+1. In the Firebase Console, navigate to Project Settings (gear icon)
+2. Under "General" tab, scroll down to "Your apps"
+3. If you haven't already, click the web icon (</>) to add a web app
+4. Register the app with a nickname (e.g., "Groovy Web")
+5. Copy the Firebase configuration object that looks like this:
+```javascript
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "your-project-id.firebaseapp.com",
+  projectId: "your-project-id",
+  storageBucket: "your-project-id.appspot.com",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID",
+  measurementId: "YOUR_MEASUREMENT_ID"
+};
+```
 
-### Firebase Admin SDK (Service Account)
-Get these values from your Firebase project service account (Project Settings > Service Accounts > Generate New Private Key):
-- `FIREBASE_PRIVATE_KEY_ID`: Private Key ID from your service account JSON
-- `FIREBASE_PRIVATE_KEY`: The full private key including the BEGIN and END markers
-- `FIREBASE_CLIENT_EMAIL`: Client email from your service account
-- `FIREBASE_CLIENT_ID`: Client ID from your service account
-- `FIREBASE_CLIENT_CERT_URL`: Client certificate URL from your service account
+### 5. Generate Service Account Key
+1. In the Firebase Console, navigate to Project Settings
+2. Go to the "Service accounts" tab
+3. Click "Generate new private key"
+4. Save the JSON file securely
 
-### YouTube API Configuration (Optional)
-- `YOUTUBE_API_KEY`: Your YouTube API Key (if you want to use the YouTube API)
+## Setting Up .env File
 
-### Application Settings
-- `DEFAULT_UPDATE_INTERVAL`: How often metadata should be updated in seconds (default: 604800, which is 7 days)
+1. Copy the `.env.example` file to create a new `.env` file:
+```bash
+cp .env.example .env
+```
 
-## Important Notes
+2. Open the `.env` file and fill in the values:
 
-- **Never commit your `.env` file to version control!** It's already included in the `.gitignore` file.
-- Keep your API keys and credentials secure.
-- If your private key contains newlines, use the format: `FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nYour Private Key Here\n-----END PRIVATE KEY-----\n"` (the newlines will be properly handled by the code)
+```
+# Database Configuration
+DB_PATH=hot100.db
 
-## Converting Firebase Service Account JSON to .env Format
+# Firebase Web Config (Client Side)
+FIREBASE_API_KEY=your_api_key
+FIREBASE_AUTH_DOMAIN=your-project-id.firebaseapp.com
+FIREBASE_PROJECT_ID=your-project-id
+FIREBASE_STORAGE_BUCKET=your-project-id.appspot.com
+FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+FIREBASE_APP_ID=your_app_id
+FIREBASE_MEASUREMENT_ID=your_measurement_id
 
-If you download a Firebase service account JSON file, you can convert it to the required .env format with these steps:
+# Firebase Admin SDK (Service Account)
+FIREBASE_PRIVATE_KEY_ID=private_key_id_from_service_account_json
+FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nYour_Private_Key_Here\n-----END PRIVATE KEY-----\n"
+FIREBASE_CLIENT_EMAIL=client_email_from_service_account_json
+FIREBASE_CLIENT_ID=client_id_from_service_account_json
+FIREBASE_CLIENT_X509_CERT_URL=client_x509_cert_url_from_service_account_json
 
-1. Open the JSON file
-2. For each key in the JSON, create a corresponding entry in your .env file:
-   - `project_id` → `FIREBASE_PROJECT_ID`
-   - `private_key_id` → `FIREBASE_PRIVATE_KEY_ID`
-   - `private_key` → `FIREBASE_PRIVATE_KEY` (ensure the newlines are preserved with \n)
-   - `client_email` → `FIREBASE_CLIENT_EMAIL`
-   - `client_id` → `FIREBASE_CLIENT_ID`
-   - `client_x509_cert_url` → `FIREBASE_CLIENT_CERT_URL` 
+# Additional Configuration
+YOUTUBE_API_KEY=your_youtube_api_key_optional
+DEFAULT_UPDATE_INTERVAL=604800
+```
+
+### Notes on .env Values
+
+- **Firebase Web Config**: These values come from the Firebase config object you copied earlier.
+- **Firebase Admin SDK**: These values come from the service account JSON file you downloaded.
+  - For the `FIREBASE_PRIVATE_KEY`, make sure to:
+    - Include the entire key including the `-----BEGIN PRIVATE KEY-----` and `-----END PRIVATE KEY-----`
+    - Keep the newline characters (`\n`)
+    - Enclose the entire key in double quotes
+- **Additional Configuration**:
+  - `YOUTUBE_API_KEY` is optional but recommended for better YouTube search results
+  - `DEFAULT_UPDATE_INTERVAL` is the time in seconds for metadata refresh (default: 7 days)
+
+## Security Considerations
+
+- Never commit your `.env` file to version control
+- Ensure `.env` is included in your `.gitignore` file
+- Keep your service account JSON file secure and do not share it
+
+## Testing Your Configuration
+
+After setting up your environment variables, you can test if they're being loaded correctly by running:
+
+```bash
+python -c "from dotenv import load_dotenv; import os; load_dotenv(); print(f'Project ID: {os.getenv(\"FIREBASE_PROJECT_ID\")}')"
+```
+
+This should output your Firebase project ID if everything is set up correctly.
+
+## Troubleshooting
+
+- **"Invalid JWT Signature" error**: Double-check your `FIREBASE_PRIVATE_KEY` format in the `.env` file.
+- **"Cannot find module 'firebase'" error**: Ensure you've installed all requirements with `pip install -r requirements.txt`.
+- **Firestore connection issues**: Verify your project ID and ensure Firestore is enabled in your Firebase project.
+- **Authentication failures**: Check that you've enabled Email/Password authentication in Firebase Console. 
