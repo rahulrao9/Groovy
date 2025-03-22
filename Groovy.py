@@ -5,7 +5,7 @@ import streamlit as st
 from PIL import Image
 import pandas as pd
 # Import the recommendation functions
-from rec import get_recommendations, cal_scores
+from reco import get_recommendations, cal_scores    
 
 DB_PATH = "hot100.db"
 META_DIR = "assets/meta"
