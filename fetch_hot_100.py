@@ -4,9 +4,13 @@ import requests
 import uuid
 import sqlite3
 from bs4 import BeautifulSoup
+from dotenv import load_dotenv
 
-# Database setup
-DB_PATH = "hot100.db"
+# Load environment variables
+load_dotenv()
+
+# Database setup from environment variables
+DB_PATH = os.getenv("DB_PATH", "hot100.db")
 
 def init_db():
     """Initialize SQLite database and create table if it doesn't exist."""

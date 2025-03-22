@@ -4,13 +4,18 @@ import sqlite3
 import streamlit as st
 from PIL import Image
 import pandas as pd
+from dotenv import load_dotenv
 # Import the recommendation functions
 from rec import get_recommendations, cal_scores
 # Import Firebase configuration and login page
 import firebase_config as fb
 from login import auth_page
 
-DB_PATH = "hot100.db"
+# Load environment variables from .env file
+load_dotenv()
+
+# Get configuration values from environment variables
+DB_PATH = os.getenv("DB_PATH", "hot100.db")
 META_DIR = "assets/meta"
 IMG_DIR = "assets/imgs"
 MUSIC_DIR = "assets/music"

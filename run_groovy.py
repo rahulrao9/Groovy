@@ -2,71 +2,44 @@ import os
 import json
 import subprocess
 import streamlit as st
+from dotenv import load_dotenv
 
-firebaseConfig = {
-    "apiKey": "AIzaSyBVK0DSYXEacaTSuIp4FiGgA3aqN3Jjf8Q",
-    "authDomain": "groovy-dev-e950b.firebaseapp.com",
-    "databaseURL": "https://groovy-dev-e950b-default-rtdb.firebaseio.com",
-    "projectId": "groovy-dev-e950b",
-    "storageBucket": "groovy-dev-e950b.appspot.com",
-    "messagingSenderId": "787286464183",
-    "appId": "1:787286464183:web:f631c16167720e76d51f32",
-    "measurementId": "G-NYX8NLTY3P"
-}
+# Load environment variables from .env file
+load_dotenv()
 
-def create_firebase_key():
-    """Create a firebase-key.json file with placeholder data if it doesn't exist."""
-    if not os.path.exists("firebase-key.json"):
-        # Create a dummy file with instructions
-        key_data = {
-            "_INSTRUCTIONS": "Replace this file with your actual Firebase service account key",
-            "type": "service_account",
-            "project_id": "your-project-id",
-            "private_key_id": "your-private-key-id",
-            "private_key": "your-private-key",
-            "client_email": "your-client-email",
-            "client_id": "your-client-id",
-            "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-            "token_uri": "https://oauth2.googleapis.com/token",
-            "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-            "client_x509_cert_url": "your-cert-url"
-        }
-        
-        with open("firebase-key.json", "w") as f:
-            json.dump(key_data, f, indent=2)
-            
-        print("Created placeholder firebase-key.json - replace with your actual Firebase service account key")
-        print("\nHow to get your Firebase service account key:")
-        print("1. Go to Firebase console: https://console.firebase.google.com/")
-        print("2. Open your project")
-        print("3. Click the gear icon (⚙️) next to 'Project Overview' and select 'Project settings'")
-        print("4. Go to the 'Service accounts' tab")
-        print("5. Click 'Generate new private key'")
-        print("6. Save the downloaded file as 'firebase-key.json' in this directory")
-        print("7. Make sure the file permissions are restricted (don't share this key!)\n")
-    
 def update_firebase_config():
-    """Check if Firebase config has been updated."""
-    import firebase_config as fb
+    """Check if Firebase config from environment variables is set up correctly."""
+    required_env_vars = [
+        "FIREBASE_API_KEY", 
+        "FIREBASE_AUTH_DOMAIN", 
+        "FIREBASE_DATABASE_URL", 
+        "FIREBASE_PROJECT_ID", 
+        "FIREBASE_STORAGE_BUCKET", 
+        "FIREBASE_MESSAGING_SENDER_ID", 
+        "FIREBASE_APP_ID",
+        # Also check for the service account variables
+        "FIREBASE_PRIVATE_KEY_ID",
+        "FIREBASE_PRIVATE_KEY",
+        "FIREBASE_CLIENT_EMAIL",
+        "FIREBASE_CLIENT_ID",
+        "FIREBASE_CLIENT_CERT_URL"
+    ]
     
-    # Check if the API key is still the placeholder
-    if fb.firebaseConfig["apiKey"] == "YOUR_API_KEY":
-        print("\n⚠️  WARNING: Firebase configuration is not set up! ⚠️")
-        print("Please update firebase_config.py with your Firebase project details.")
-        print("Visit https://console.firebase.google.com/ to create a project and get your config.\n")
+    # Check if all required environment variables are set
+    missing_vars = [var for var in required_env_vars if not os.getenv(var)]
     
-    # Check if all required keys are present
-    required_keys = ["apiKey", "authDomain", "databaseURL", "projectId", "storageBucket", "messagingSenderId", "appId"]
-    missing_keys = [key for key in required_keys if key not in fb.firebaseConfig]
-    if missing_keys:
-        print(f"\n⚠️  WARNING: Missing required Firebase configuration keys: {', '.join(missing_keys)} ⚠️")
-        print("Please add these keys to your firebaseConfig dictionary in firebase_config.py")
-        print("For the databaseURL, use: https://YOUR-PROJECT-ID.firebaseio.com\n")
-        
-    # Check if Firestore database needs to be created
+    if missing_vars:
+        print("\n⚠️  WARNING: Missing required Firebase configuration environment variables: ⚠️")
+        for var in missing_vars:
+            print(f"- {var}")
+        print("\nPlease add these variables to your .env file")
+        print("See ENV_SETUP.md for instructions on setting up environment variables\n")
+    
+    # Check if Firebase credentials are valid
     try:
+        import firebase_config as fb
         # Try to access a collection to see if Firestore exists
-        fb.db.collection('test').get()
+        fb.get_firestore_db().collection('test').get()
     except Exception as e:
         if "The database (default) does not exist" in str(e):
             print("\n⚠️  WARNING: Firestore database not found! ⚠️")
@@ -77,6 +50,9 @@ def update_firebase_config():
             print("4. Click 'Create database'")
             print("5. Select a location close to your users")
             print("6. Start in test mode for development, then set up security rules later\n")
+        else:
+            print(f"\n⚠️  WARNING: Firebase configuration error: {e} ⚠️")
+            print("Please check your .env file and make sure all Firebase credentials are correct\n")
 
 def create_groovy_logo():
     """Create a placeholder logo if it doesn't exist."""
@@ -121,9 +97,11 @@ def main():
     
     # Make sure necessary directories exist
     os.makedirs("assets", exist_ok=True)
+    os.makedirs("assets/music", exist_ok=True)
+    os.makedirs("assets/meta", exist_ok=True)
+    os.makedirs("assets/imgs", exist_ok=True)
     
-    # Create placeholder files
-    create_firebase_key()
+    # Create placeholder logo
     create_groovy_logo()
     
     # Check Firebase config

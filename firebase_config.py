@@ -4,31 +4,65 @@ import pyrebase
 import streamlit as st
 import os
 import json
+from dotenv import load_dotenv
 
-# Firebase configuration
-firebaseConfig = {
-    "apiKey": "AIzaSyBVK0DSYXEacaTSuIp4FiGgA3aqN3Jjf8Q",
-    "authDomain": "groovy-dev-e950b.firebaseapp.com",
-    "databaseURL": "https://groovy-dev-e950b-default-rtdb.firebaseio.com",
-    "projectId": "groovy-dev-e950b",
-    "storageBucket": "groovy-dev-e950b.appspot.com",
-    "messagingSenderId": "787286464183",
-    "appId": "1:787286464183:web:f631c16167720e76d51f32",
-    "measurementId": "G-NYX8NLTY3P"
-}
+# Load environment variables from .env file
+load_dotenv()
+
+# Firebase configuration from environment variables
+def get_firebase_config():
+    """Get Firebase configuration from environment variables."""
+    return {
+        "apiKey": os.getenv("FIREBASE_API_KEY"),
+        "authDomain": os.getenv("FIREBASE_AUTH_DOMAIN"),
+        "databaseURL": os.getenv("FIREBASE_DATABASE_URL"),
+        "projectId": os.getenv("FIREBASE_PROJECT_ID"),
+        "storageBucket": os.getenv("FIREBASE_STORAGE_BUCKET"),
+        "messagingSenderId": os.getenv("FIREBASE_MESSAGING_SENDER_ID"),
+        "appId": os.getenv("FIREBASE_APP_ID")
+    }
 
 # Initialize Firebase Admin SDK (for server-side operations)
-if not firebase_admin._apps:
-    cred = credentials.Certificate("firebase-key.json")
-    firebase_admin.initialize_app(cred)
+def initialize_firebase_admin():
+    """Initialize Firebase Admin SDK using environment variables."""
+    if not firebase_admin._apps:
+        try:
+            # Use environment variables directly
+            cred = credentials.Certificate({
+                "type": "service_account",
+                "project_id": os.getenv("FIREBASE_PROJECT_ID"),
+                "private_key_id": os.getenv("FIREBASE_PRIVATE_KEY_ID"),
+                "private_key": os.getenv("FIREBASE_PRIVATE_KEY").replace("\\n", "\n"),
+                "client_email": os.getenv("FIREBASE_CLIENT_EMAIL"),
+                "client_id": os.getenv("FIREBASE_CLIENT_ID"),
+                "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+                "token_uri": "https://oauth2.googleapis.com/token",
+                "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+                "client_x509_cert_url": os.getenv("FIREBASE_CLIENT_CERT_URL")
+            })
+            firebase_admin.initialize_app(cred)
+            print("Initialized Firebase Admin SDK with environment variables")
+        except Exception as e:
+            print(f"Error initializing Firebase Admin SDK with environment variables: {e}")
+            print("Please ensure your .env file contains all required Firebase credentials")
 
 # Initialize Pyrebase (for auth and user operations)
-firebase = pyrebase.initialize_app(firebaseConfig)
-pb_auth = firebase.auth()
+def initialize_firebase_client():
+    """Initialize Firebase client SDK."""
+    config = get_firebase_config()
+    return pyrebase.initialize_app(config)
 
-# Initialize Firestore
-use_firestore = True
-db = firestore.client()
+# Get Firestore database
+def get_firestore_db():
+    """Get Firestore database client."""
+    initialize_firebase_admin()
+    return firestore.client()
+
+# Initialize on module load
+initialize_firebase_admin()
+firebase = initialize_firebase_client()
+pb_auth = firebase.auth()
+db = get_firestore_db()
 
 # Authentication Functions
 def sign_up(email, password, username):

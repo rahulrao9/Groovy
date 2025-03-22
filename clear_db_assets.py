@@ -1,8 +1,13 @@
 import os
 import shutil
 import sqlite3
+from dotenv import load_dotenv
 
-DB_PATH = "hot100.db"
+# Load environment variables
+load_dotenv()
+
+# Get database path from environment variable
+DB_PATH = os.getenv("DB_PATH", "hot100.db")
 
 def clear_directory(directory):
     """Delete all files inside a given directory without removing the directory itself."""
@@ -11,6 +16,9 @@ def clear_directory(directory):
             file_path = os.path.join(directory, file)
             try:
                 if os.path.isfile(file_path) or os.path.islink(file_path):
+                    # Skip the default image
+                    if file_path == "assets/default.jpg":
+                        continue
                     os.unlink(file_path)  # Remove file or symbolic link
                 elif os.path.isdir(file_path):
                     shutil.rmtree(file_path)  # Remove directory and its contents

@@ -6,8 +6,15 @@ from pathlib import Path
 import time
 import shutil
 import base64
+from dotenv import load_dotenv
 
-DB_PATH = "hot100.db"
+# Load environment variables from .env file
+load_dotenv()
+
+# Get database path from environment variable
+DB_PATH = os.getenv("DB_PATH", "hot100.db")
+# Get default update interval from environment variable (default to 7 days)
+DEFAULT_UPDATE_INTERVAL = int(os.getenv("DEFAULT_UPDATE_INTERVAL", 604800))
 
 def ensure_default_image_exists():
     """Create a default image if it doesn't exist."""
@@ -114,11 +121,11 @@ def metadata_needs_update(song_id, youtube_url):
             if field not in metadata or not metadata[field]:
                 return True
                 
-        # Check if metadata is older than 7 days (604800 seconds)
+        # Check if metadata is older than the update interval from .env
         if "last_updated" in metadata:
             last_updated = metadata["last_updated"]
             current_time = int(time.time())
-            if current_time - last_updated > 604800:  # Update metadata weekly
+            if current_time - last_updated > DEFAULT_UPDATE_INTERVAL:  # Use env variable
                 return True
     except Exception:
         return True
@@ -127,6 +134,9 @@ def metadata_needs_update(song_id, youtube_url):
 
 def search_youtube(artist_name, song_name):
     """Use yt-dlp to find the first video URL from YouTube search and extract metadata."""
+    # Get YouTube API key if set
+    youtube_api_key = os.getenv("YOUTUBE_API_KEY")
+    
     search_query = f"ytsearch1:{artist_name} {song_name} official music video"
     
     ydl_opts = {
@@ -134,6 +144,10 @@ def search_youtube(artist_name, song_name):
         "no_warnings": True,
         "extract_flat": False,  # Allow full metadata extraction
     }
+    
+    # If API key is available, use it
+    if youtube_api_key:
+        ydl_opts["youtube_api_key"] = youtube_api_key
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(search_query, download=False)
