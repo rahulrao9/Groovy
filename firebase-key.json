@@ -1,0 +1,21 @@
+{
+  "type": "service_account",
+  "project_id": "groovy-dev-e950b",
+  "private_key_id": "9af91011c58e6664f0b6c3cb9fa21f6e6f445184",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC12D2+wi/ZARuj\n+O74SWpRSRd92QNqQ2NTeQhfLC1r1L53dPeiMoAa3WuWiykfHfIeeqcOdXo7ogWa\nQcvaMwKPJyUUT4fpidcU8lF5Z70DpMAnS/RE+rqRlbPvB3sYuTd9nynXmXl/A4xH\nBHwxaLYO2Zlyaip2Z2GSEpjztl9INXBftAqp37/SRGjFScW0xTHwwl98XvaIgrge\ntOL5VfMQEiJn/FsCjQH3q1ImcixHwjueTiNIABeaow3gsfBu9YZwxv+xMjm3UxjH\neg7SGqaPPRMkgd9z8cEgO2IgMLB1SnriEn2JAl86OXhyW3v0ETtICFkOvQghhfz3\nMbar1PKvAgMBAAECggEAPH92P14khAo502owutrV67gpAB3wZGyKAY3dSqiMbfkH\n6v83mbc6ZnWu4xVmN2uDjz9YD9fmtCs5uPHV68CXw9+OlvzEp15L97SMhZsNR8aK\nhShgWoieBGxtQgNXoUiRnRIUXh25zZd1FnV4Cgofs74SLn4CpYTMccgNKdvNRFyu\noj1NCG06Mxhvz7DsZJmHeM7vXO9A07ZH3qq6rvCvq7GhGdO3pZoILESh6zrvVfbY\n/EydMJvKIHv4hKYIVJOwv59cZrijHTN7qTDwjzFtDYdAMMXI7nFPX3D156k7hEy/\nEp+UlOe86tIyLrw9XahZzkDqYb8a3w0OMp7G8z8x/QKBgQDwRYO+7PhoHlBcKDi6\nI/N8iRutyVtLBNc+YDrRRQfYv47eYbIwKtSh7brsI1G480U/US2cj2pdal0o4tti\nXdvLOe4/mKMVXUJ5vghvXLwfKnmm8TWqEM9TZrOEOkwPInvuw7dBnM5wpsoseHWI\ngTVfbMf1getT5asa7oj8N4xjZQKBgQDBv5sVxcPn87NkMh5pXbvl/3XlQy7/eG6k\nrS5LAWNIXXK1BdD7AtB3Bk6zrp11alAiduU0K/LYIaFsWtb+2I9zcrnG1x5yGSoD\nZh9BU9Mg0R0hBV9EnmtEfI96FxlXIVaBpx3RsywDuiBszLIGMFqbGjGU4oTBqHfZ\nPNHf6hNegwKBgQC8IYIF1eCvDcVYU3oPbaTyBx0wFzCvbcvnoEuNnmKFeYAxageu\npWq2m8E3snQDwB+hczumkbj0ChuFrxOeUuWNm/+LtkVDrjElyAEsyUzXjleQut+N\nGPptUEYRq9/wHc0yZ/aunkwacs5swaktyBX1cOSkvCR6HaO7Q7jo28nF7QJ/SKeR\ngJio3lKE8w3YWarMy3MAwvhup16CHz7SHU5n7LseSMPlmjtz8S5sVPUmFuHHKyVq\nziWs61+xKPDnrqmHIcPj5qzEvgSxvJSPI/BLPAMu6TMahqDhmM0dAKuo1QOrbPM+\nO2T1HHCvuB0KpUd8sq0f6rUHE5gZWV11VoJwwQKBgQCm3DORqSicS/g0WuwwCBeO\nO5NnhS3Zwd3elMLPpQTTDJ8sgpacsi+AEv0TCzfd+qFmGs4jSLMbiIQhBv9BlMpU\nQr3OLhOWnXeps3GoGZ2CRKjqc4WRkZ3+DfIt8Aw0c5MeH5q5mfeAf5nOgAZUV0Y7\nKUcEBIvql8cVhnZHebdX0A==\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-fbsvc@groovy-dev-e950b.iam.gserviceaccount.com",
+  "client_id": "109229741194781309480",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40groovy-dev-e950b.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com",
+  "apiKey": "AIzaSyBVK0DSYXEacaTSuIp4FiGgA3aqN3Jjf8Q",
+  "authDomain": "groovy-dev-e950b.firebaseapp.com",
+  "databaseURL": "https://groovy-dev-e950b-default-rtdb.firebaseio.com",
+  "projectId": "groovy-dev-e950b",
+  "storageBucket": "groovy-dev-e950b.appspot.com",
+  "messagingSenderId": "787286464183",
+  "appId": "1:787286464183:web:f631c16167720e76d51f32",
+  "measurementId": "G-NYX8NLTY3P"
+}

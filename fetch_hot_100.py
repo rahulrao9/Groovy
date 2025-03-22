@@ -34,7 +34,7 @@ def init_db():
     conn.close()
 
 def song_exists(artist, song):
-    """Check if the song is already in the database."""
+    """Check if the song is already in the database and update its counter."""
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute("SELECT id, count FROM hot100 WHERE artist = ? AND song = ?", (artist, song))
@@ -47,7 +47,7 @@ def song_exists(artist, song):
         conn.commit()
     
     conn.close()
-    return result is not None  # Returns True if song exists
+    return result[0] if result else None  # Returns song_id if exists, None otherwise
 
 def save_to_db(unique_id, artist, song):
     """Save a new entry to the database."""
@@ -77,9 +77,12 @@ def fetch_hot_100(limit=10):
     os.makedirs("assets/imgs", exist_ok=True)
     
     count = 0
+    new_songs = 0
+    updated_songs = 0
+    
     for item in chart_items:
-        if count >= limit:
-            break
+        # if count >= limit:
+        #     break
         
         # Locate the correct li tag containing song and artist info
         details_tag = item.find("li", class_="o-chart-results-list__item // lrv-u-flex-grow-1 lrv-u-flex lrv-u-flex-direction-column lrv-u-justify-content-center lrv-u-border-b-1 u-border-b-0@mobile-max lrv-u-border-color-grey-light lrv-u-padding-l-050 lrv-u-padding-l-1@mobile-max")
@@ -96,18 +99,21 @@ def fetch_hot_100(limit=10):
             song_name = None
             artist_name = None
         
-        # Extract image URL
-        img_tag = item.find("img", class_="c-lazy-image__img")
-        img_url = img_tag["src"] if img_tag else None
-        
         # Skip entries with missing data
         if not song_name or not artist_name:
             continue
         
         # Check if the song already exists in the database
-        if song_exists(artist_name, song_name):
-            print(f"Skipping duplicate entry: {artist_name} - {song_name}")
+        existing_song_id = song_exists(artist_name, song_name)
+        if existing_song_id:
+            print(f"Song already exists: {artist_name} - {song_name} (ID: {existing_song_id})")
+            updated_songs += 1
+            count += 1
             continue
+        
+        # Extract image URL
+        img_tag = item.find("img", class_="c-lazy-image__img")
+        img_url = img_tag["src"] if img_tag else None
         
         # Generate unique UUID
         unique_id = str(uuid.uuid4())  # Generate a unique identifier
@@ -130,8 +136,12 @@ def fetch_hot_100(limit=10):
         
         # Save to database
         save_to_db(unique_id, artist_name, song_name)
-        
+        new_songs += 1
         count += 1
+    
+    print(f"\nSummary: Found {count} songs in Hot 100")
+    print(f"  - {new_songs} new songs added to database")
+    print(f"  - {updated_songs} existing songs updated")
 
 if __name__ == "__main__":
     init_db()  # Initialize the database
